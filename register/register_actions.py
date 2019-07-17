@@ -33,6 +33,12 @@ def add_friend(msg):
 
 @itchat.msg_register(TEXT, isGroupChat=True)
 def text_reply(msg):
+    text = msg.text
+    response = requests.get(config.to_chat_with_machine + text)
+
+    if response.status_code == 200:
+        text = json.loads(response.content).get('content')
+
     if msg.isAt:
         msg.user.send(u'@%s\u2005I received: %s' % (
-            msg.actualNickName, msg.text))
+            msg.actualNickName, text))
